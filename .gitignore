@@ -1,0 +1,18 @@
+# Jasmin assembly output
+*.j
+
+# compiled JVM bytecode
+*.class
+
+# Scala build artifacts
+target/
+*.tasty
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

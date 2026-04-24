@@ -1,8 +1,7 @@
 import scala.language.implicitConversions
 import scala.language.reflectiveCalls
-import scala.io.StdIn.readInt
 // A Small Compiler for the WHILE Language
-// (it does not use a parser and lexer)
+// uses a derivative-based lexer and combinator parser
 
 abstract class Parser[I <% Seq[_], T] {
   def parse(ts: I): Set[(T, I)]
@@ -359,9 +358,9 @@ val DIGIT = CSET(('0' to '9').toSet)
 val ID = SYM ~ ("_" | SYM | DIGIT).%
 val DIGIT2 = CSET(('1' to '9').toSet)
 val NUM = DIGIT | ( DIGIT2 ~ DIGIT.% )
-val KEYWORD : Rexp = "while" | "if" | "then" | "else" | "do" | "for" | "to" | "true" | "false" | "read" | "write" | "skip"
+val KEYWORD : Rexp = "while" | "if" | "then" | "else" | "do" | "for" | "upto" | "true" | "false" | "read" | "write" | "skip"
 val SEMI: Rexp = ";"
-val OP: Rexp = ":=" | "==" | "-" | "+" | "*" | "!=" | "<" | ">" | "&&" | "||" | "%" | "/"
+val OP: Rexp = ":=" | "==" | "=" | "-" | "+" | "*" | "!=" | "<" | ">" | "&&" | "||" | "%" | "/"
 val WHITESPACE = (" " | "\n" | "\t") ~ (" " | "\n" | "\t").%
 val PAREN: Rexp = ")" | "{" | "}" | "("
 val STRING: Rexp = "\"" ~ SYM.% ~ "\""
@@ -375,13 +374,6 @@ val WHILE_REGS = (("k" $ KEYWORD) |
                   ("str" $ STRING) |
                   ("p" $ PAREN) |
                   ("w" $ WHITESPACE)).%
-
-def time_needed[T](code: => T) = {
-   val start = System.nanoTime()
-   code
-   val end = System.nanoTime()
-   println("Time taken: " + (end - start)/(1.0e9) + " seconds.")
-}
 
 val progFib = """
 write "Fib";
